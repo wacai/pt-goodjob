@@ -76,6 +76,17 @@ Quick Started
      }
 ```
 
+
+design
+---------------------
+<https://github.com/wacai/pt-goodjob/wiki/design>
+
+FAQ
+---------------------
+<https://github.com/wacai/pt-goodjob/wiki/FAQ>
+
+
+
 联系我们
 ---------------------
 #####  后台问题:xuanwu@wacai.com
