@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wacai.pt.goodjob.schedule.mapper.TaskParamMapper">
+
+    <insert id="insertTaskParam" parameterType="com.wacai.pt.goodjob.schedule.model.TaskParamModel" useGeneratedKeys="true" keyProperty="id">
+        insert into sched_task_param (param, task_config_id, lastUpdateTime, createTime, lastModifyBy)
+        values (#{param}, #{taskConfigId}, now(), now(), #{lastModifyBy})
+    </insert>
+
+    <!-- 删除参数 -->
+    <delete id="deleteTaskParamById" parameterType="int">
+        delete from sched_task_param where id = #{id}
+    </delete>
+
+    <!-- 计算参数 -->
+    <select id="countParamById" parameterType="int" resultType="int" >
+        select count(id) from sched_task_param where id = #{id}
+    </select>
+
+    <!-- 计算参数 -->
+    <select id="countParamByParam" parameterType="com.wacai.pt.goodjob.interior.remote.bean.TaskParamBean" resultType="int" >
+        select count(id) from sched_task_param where param = #{param} and task_config_id = #{task_config_id}
+    </select>
+
+    <!-- 通过ID更新任务参数 -->
+    <update id="updateTaskParamById" parameterType="com.wacai.pt.goodjob.interior.remote.bean.TaskParamBean">
+        update sched_task_param
+        <set>
+            <if test="param != null">
+                param = #{param},
+            </if>
+            <if test="lastModifyBy != null">
+                lastModifyBy = #{lastModifyBy},
+            </if>
+            lastUpdateTime = now()
+        </set>
+        where id = #{id}
+    </update>
+</mapper>

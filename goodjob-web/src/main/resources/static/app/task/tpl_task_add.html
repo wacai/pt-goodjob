@@ -1,0 +1,207 @@
+<div class="panel">
+    {{if id!=null}}
+    <div class="panel-title">
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+            修改后, 点击【保存并生效】或【重启】或先【停用】再【启用】任务才生效!
+        </div>
+    </div>
+    {{/if}}
+    <div class="panel-body">
+        <form role="form" class="form-horizontal" id="put_task_form">
+            <input type="hidden" name="id" value="{{id}}">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>任务名称<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control input-sm" placeholder="请输入任务名称"
+                               name="task_name" value="{{task_name}}" required>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>任务描述</label>
+                        <input type="text" class="form-control input-sm" placeholder="请输入任务描述关键字"
+                               name="task_desc" value="{{task_desc}}">
+                    </div>
+                    <div class="col-sm-4">
+                        <label>项目ID</label>
+                        <select name="project_id" class="form-control" id="sel_projectId"
+                                {{if project_id}}disabled {{/if}}>
+                        <option value="-1">
+                            --请选择项目--
+                        </option>
+                        {{each plist as project i}}
+                        <option value="{{project.id}}" {{if project_id==project.id}}selected{{/if}}
+                        data-projectcode="{{project.code}}"
+                        >{{project.name}}
+                        </option>
+                        {{/each}}
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>超时(秒)</label>
+                        <input type="text" class="form-control input-sm" placeholder="请务必输入数字"
+                               name="timeout" value="{{timeout}}">
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="cron_exp">cron表达式<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control input-sm" name="cron_exp" placeholder="请输入cron表达式"
+                               id="cron_exp" required
+                               value="{{cron_exp}}"/>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <label>dubbo group<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control input-sm" placeholder="请以【projectCode + 业务】命名"
+                               name="task_group" value="{{task_group}}" required id="taskGroupCode">
+
+                        <!--<div class="input-group">-->
+                        <!--<div class="input-group-addon">projectCode-</div>-->
+                        <!--<input type="text" class="form-control" id="exampleInputAmount" placeholder="业务code">-->
+                        <!--</div>-->
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>任务类型</label>
+                        {{if type>-1}}
+                        <input type="hidden" class="form-control input-sm"
+                               name="type" value="{{type}}"/>
+                        <input type="text" class="form-control input-sm"
+                               value="{{if type==1}}分片{{else if type==2}}依赖{{else if type==0}}默认{{/if}}"
+                               readonly>
+                        {{else}}
+                        <select name="type" class="form-control input-sm" id="changeTaskType">
+                            <option value="0">默认</option>
+                            <option value="1">分片</option>
+                            <option value="2">依赖</option>
+                        </select>
+                        {{/if}}
+
+                    </div>
+
+                    <div class="col-sm-4">
+                        <label>任务跳过</label>
+                        <select name="delay_skip" class="form-control input-sm" value="{{delay_skip}}"
+                                id="delay_skip_control">
+                            <option value="0" {{if delay_skip==0}}selected{{/if}}>不跳过</option>
+                            <option value="1" {{if delay_skip==1}}selected{{/if}}>跳过</option>
+                        </select>
+                    </div>
+                    <fieldset class="col-sm-4 {{if delay_skip==0||delay_skip==null}}hidden{{/if}}"
+                              data-relation="delay_skip_control">
+                        <label>精确执行</label>
+                        <div>
+                            {{if id!=null}}
+                            <div class="radio-inline">
+                                <label>
+                                    <input type="radio" value="0" name="exact_once" {{if exact_once==0}}checked{{/if}}>
+                                    是
+                                </label>
+                            </div>
+                            <div class="radio-inline">
+                                <label>
+                                    <input type="radio" value="1" name="exact_once" {{if exact_once==1}}checked{{/if}}>
+                                    否
+                                </label>
+                            </div>
+                            {{else}}
+                            <div class="radio-inline">
+                                <label>
+                                    <input type="radio" value="0" name="exact_once" checked>
+                                    是
+                                </label>
+                            </div>
+                            <div class="radio-inline">
+                                <label>
+                                    <input type="radio" value="1" name="exact_once">
+                                    否
+                                </label>
+                            </div>
+                            {{/if}}
+
+                        </div>
+
+                    </fieldset>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    {{if type}}
+                    {{if type==1}}
+                    <fieldset data-relation="changeTaskType" data-val="1"
+                              style="border-radius: 10px;display: block;">
+                        <legend>
+                            <label class="small">编辑分片参数</label> <span class="glyphicon-plus"
+                                                                      data-use="add_param_control"
+                                                                      style="margin-left: 10px;"></span></legend>
+
+                        {{each paramList as param i}}
+                        <div class="col-sm-4">
+                            <label>分片参数</label>
+
+                            <span
+                                    class="glyphicon-minus pull-right"
+                                    data-use="del_param_control" data-paramid="{{param.id}}"></span>
+                            <input type="text" class="form-control input-sm" value="{{param.param}}" name="paramList">
+                        </div>
+                        {{/each}}
+
+                    </fieldset>
+                    {{else if type==2}}
+                    <fieldset>
+                        <legend style="margin-left: 10px"><label class="small">设置依赖关系</label></legend>
+                        <div class="col-sm-4">
+                            <label>依赖关系</label>
+                            <input type="text" class="form-control input-sm" value="{{job_data}}" name="job_data">
+                        </div>
+                    </fieldset>
+                    {{/if}}
+                    {{else}}
+                    <fieldset data-relation="changeTaskType" data-val="1" data-total=1
+                              style="border-radius: 10px;">
+                        <div class="col-sm-4">
+                            <label>添加分片参数<span class="badge pull-right" id="add_param_count">1</span></label>
+                             <span class="glyphicon-plus pull-right " data-use="add_param_control"
+                                   style="margin-left: 10px;"></span>
+
+                            <input placeholder="输入分片参数" type="text" class="form-control input-sm"
+                                   name="paramList"/>
+                        </div>
+
+                    </fieldset>
+
+                    <fieldset data-relation="changeTaskType" data-val="2">
+                        <div class="col-sm-12">
+                            <label>设置依赖关系</label>
+                            <div class="panel-body" style="border: 1px solid #666">
+                                <input placeholder="设置依赖关系" type="text" class="form-control input-sm"
+                                       name="job_data"/>
+                            </div>
+
+                        </div>
+                    </fieldset>
+
+                    {{/if}}
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <div class="panel-footer  {{if delay_skip==0||delay_skip==null}}hidden{{/if}}" id="exact_once_info">
+        【是】 —— 上次未执行完下次调度不再执行
+        <br>
+        【否】 —— 超时必填，上次未执行完，如果超过设定的超时时间，下次调度继续执行
+    </div>
+</div>

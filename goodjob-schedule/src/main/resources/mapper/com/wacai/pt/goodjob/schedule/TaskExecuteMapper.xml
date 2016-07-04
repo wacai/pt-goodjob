@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wacai.pt.goodjob.schedule.mapper.TaskExecuteMapper">
+
+    <select id="findLastTaskExecuteByTaskId" resultType="com.wacai.pt.goodjob.schedule.vo.LastTaskExecuteVo" parameterType="java.lang.Integer" >
+        select
+        t.state, t.start_time, t.end_time
+        from sched_task_execute t
+        where t.task_config_id = #{taskId} order by t.id desc limit 1
+    </select>
+
+    <insert id="insertTaskExecute" parameterType="com.wacai.pt.goodjob.schedule.model.TaskExecuteModel" useGeneratedKeys="true" keyProperty="id">
+        insert into sched_task_execute (task_config_id, task_name, exec_desc, job_count, percent, task_config_type, exec_type, state, exec_msg, start_time, sched_time, createTime, lastUpdateTime)
+        values (#{task_config_id}, #{task_name}, #{exec_desc}, #{job_count}, #{percent}, #{task_config_type}, #{exec_type}, 2, #{exec_msg}, #{start_time}, #{sched_time}, now(), now())
+    </insert>
+
+    <update id="updateExecuteRespById" parameterType="com.wacai.pt.goodjob.remote.bean.ExecuteResponse">
+        update sched_task_execute
+        <set>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="execMsg != null">
+                exec_msg = #{execMsg},
+            </if>
+            lastUpdateTime = now()
+        </set>
+        where id = #{taskExecuteId}
+    </update>
+</mapper>

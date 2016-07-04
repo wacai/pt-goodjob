@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/batch  http://www.springframework.org/schema/batch/spring-batch.xsd
+       http://code.alibabatech.com/schema/dubbo  http://code.alibabatech.com/schema/dubbo/dubbo.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <dubbo:application name="${application.name}"/>
+    <dubbo:provider loadbalance="random" port="${dubbo.service.port}" />
+    <dubbo:registry protocol="zookeeper" address="${dubbo.zk.servers}" client="zkclient" group="${dubbo.zk.group}"/>
+    <dubbo:protocol name="dubbo"/>
+    <dubbo:consumer check="false"/>
+    <!--   ==============上诉为dubbo通用配置，如有则不用配==================================     -->
+
+
+    <bean id="failHandle" class="com.wacai.pt.goodjob.node.file.FailHandle"/>
+    <!-- 处理服务连接不上，如断网 -->
+    <dubbo:reference id="jobExecuteRespService" timeout="40000"
+                     interface="com.wacai.pt.goodjob.remote.service.JobExecuteRespService"/>
+    <!--  ============== 引用调度回调服务，必须项，超时设置为40秒 ===========================    -->
+
+    <!--  ************** 以上为通用配置 *************************************    -->
+
+
+    <!--  ************** 以下为业务实现 *************************************    -->
+
+    <bean id="jobExecuteService1" class="com.wacai.pt.goodjob.example.JobExecuteService1"/>
+    <!-- 测试任务1实现的Service -->
+    <dubbo:service group="goodjob-example_j1g1" interface="com.wacai.pt.goodjob.remote.service.JobExecuteService"
+                   timeout="10000" retries="0" ref="jobExecuteService1"/>
+
+
+    <bean id="jobExecuteService2" class="com.wacai.pt.goodjob.example.JobExecuteService2"/>
+    <!-- 测试任务2实现的Service -->
+    <dubbo:service group="goodjob-example_j2g1" interface="com.wacai.pt.goodjob.remote.service.JobExecuteService"
+                   timeout="10000" retries="0" ref="jobExecuteService2"/>
+
+    <bean id="jobExecuteService3" class="com.wacai.pt.goodjob.example.JobExecuteService3"/>
+    <!-- 测试任务3实现的Service -->
+    <dubbo:service group="goodjob-example_j3g1" interface="com.wacai.pt.goodjob.remote.service.JobExecuteService"
+                   ref="jobExecuteService3" timeout="10000" retries="0"/>
+
+
+    <bean id="jobExecuteService4" class="com.wacai.pt.goodjob.example.JobExecuteService4"/>
+    <!-- 测试任务4实现的Service -->
+    <dubbo:service group="goodjob-example_j4g1" interface="com.wacai.pt.goodjob.remote.service.JobExecuteService"
+                   timeout="10000" ref="jobExecuteService4" retries="0"/>
+
+
+    <bean id="jobExecuteService5" class="com.wacai.pt.goodjob.example.JobExecuteService5"/>
+    <!-- 测试任务5实现的Service -->
+    <dubbo:service group="goodjob-example_j5g1" interface="com.wacai.pt.goodjob.remote.service.JobExecuteService"
+                   ref="jobExecuteService5" timeout="10000" retries="0"/>
+
+
+    <bean id="jobExecuteService6" class="com.wacai.pt.goodjob.example.JobExecuteService6"/>
+    <!-- 测试任务6实现的Service -->
+    <dubbo:service group="goodjob-example_j6g1" interface="com.wacai.pt.goodjob.remote.service.JobExecuteService"
+                   ref="jobExecuteService6" timeout="10000" retries="0"/>
+
+    <bean id="jobExecuteService7" class="com.wacai.pt.goodjob.example.JobExecuteService7"/>
+    <!-- 测试任务7实现的Service -->
+    <dubbo:service group="goodjob-example_j7g1" interface="com.wacai.pt.goodjob.remote.service.JobExecuteService"
+                   ref="jobExecuteService7" timeout="10000" retries="0"/>
+
+    <bean id="jobExecuteServiceException" class="com.wacai.pt.goodjob.example.JobExecuteServiceException"/>
+    <!-- 测试任务8实现的Service -->
+    <dubbo:service group="goodjob-example_exception0" interface="com.wacai.pt.goodjob.remote.service.JobExecuteService"
+                   ref="jobExecuteServiceException" timeout="10000" retries="0"/>
+
+    <bean id="jobExecuteServiceException1" class="com.wacai.pt.goodjob.example.JobExecuteServiceException1"/>
+    <!-- 测试任务实现的Service -->
+    <dubbo:service group="goodjob-example_exception1" interface="com.wacai.pt.goodjob.remote.service.JobExecuteService"
+                   ref="jobExecuteServiceException1" timeout="10000" retries="0"/>
+
+    <bean id="jobExecuteServiceException2" class="com.wacai.pt.goodjob.example.JobExecuteServiceException2"/>
+    <!-- 测试任务9实现的Service -->
+    <dubbo:service group="goodjob-example_exception2" interface="com.wacai.pt.goodjob.remote.service.JobExecuteService"
+                   ref="jobExecuteServiceException2" timeout="10000" retries="0"/>
+
+    <bean id="jobExecuteServiceException3" class="com.wacai.pt.goodjob.example.JobExecuteServiceException3"/>
+    <!-- 测试任务10实现的Service -->
+    <dubbo:service group="goodjob-example_exception3" interface="com.wacai.pt.goodjob.remote.service.JobExecuteService"
+                   ref="jobExecuteServiceException3" timeout="10000" retries="0"/>
+
+    <bean id="jobDisService1" class="com.wacai.pt.goodjob.example.JobDisService1"/>
+    <!-- 测试任务11实现的Service -->
+    <dubbo:service group="goodjob-example_dis1" interface="com.wacai.pt.goodjob.remote.service.JobExecuteService"
+                   ref="jobDisService1" timeout="10000" retries="0"/>
+
+    <bean id="jobDisService2" class="com.wacai.pt.goodjob.example.JobDisService2"/>
+    <!-- 测试任务12实现的Service -->
+    <dubbo:service group="goodjob-example_dis2" interface="com.wacai.pt.goodjob.remote.service.JobExecuteService"
+                   ref="jobDisService2" timeout="10000" retries="0"/>
+
+    <bean id="jobDisService3" class="com.wacai.pt.goodjob.example.JobDisService3"/>
+    <!-- 测试任务13实现的Service -->
+    <dubbo:service group="goodjob-example_dis3" interface="com.wacai.pt.goodjob.remote.service.JobExecuteService"
+                   ref="jobDisService3" timeout="10000" retries="0"/>
+
+</beans>

@@ -1,0 +1,17 @@
+{
+  "name": "goodjob",
+  "author": "baojun <baojun@wacai.com>",
+  "private": true,
+  "dependencies": {
+    "lodash": "^4.8.1",
+    "moment": "^2.12.0"
+  },
+  "scripts": {
+    "prestart": "npm install -g fe-dev-server",
+    "start": "fds -o",
+    "dev": "fds -o"
+  },
+  "devDependencies": {
+    "express": "^4.13.4"
+  }
+}

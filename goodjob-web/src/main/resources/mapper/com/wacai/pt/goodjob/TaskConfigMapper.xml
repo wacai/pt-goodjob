@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wacai.pt.goodjob.mapper.TaskConfigMapper">
+
+    <!-- 查询任务配置 -->
+    <select id="findTaskConfigs" parameterType="com.wacai.pt.goodjob.vo.args.TaskConfigSearchVo" resultType="com.wacai.pt.goodjob.vo.TaskConfigVo">
+        select ts.id, ts.task_name, ts.task_state, ts.task_desc, ts.task_group, ts.project_id, p.name as project_name, ts.cron_exp, ts.timeout, ts.exact_once, ts.delay_skip, ts.retry, ts.type, ts.next_fire_time, ts.prev_fire_time, ts.lastModifyBy, ts.lastUpdateTime
+        from sched_task_config ts
+        join sched_project p on ts.project_id = p.id
+        <where>
+            deleted = 1
+            <if test="task_name != null and task_name != ''">
+                and ts.task_name like #{task_name}
+            </if>
+            <if test="task_group != null and task_group != ''">
+                and ts.task_group like #{task_group}
+            </if>
+            <if test="project_id != null">
+                and p.id = #{project_id}
+            </if>
+        </where>
+        limit 100
+    </select>
+
+    <!-- 通过ID查询 -->
+    <select id="findTaskConfigById" parameterType="int" resultType="com.wacai.pt.goodjob.vo.TaskConfigVo">
+        select ts.id, ts.task_name, ts.task_state, ts.task_desc, ts.task_group, ts.project_id, p.name as project_name, ts.cron_exp, ts.timeout, ts.exact_once, ts.delay_skip, ts.retry, ts.type, ts.next_fire_time, ts.prev_fire_time, ts.lastModifyBy, ts.lastUpdateTime
+        from sched_task_config ts
+        join sched_project p on ts.project_id = p.id
+        where ts.id = #{id}
+    </select>
+
+    <!--  通过项目ID查询下拉 -->
+    <select id="findTaskConfigByProjectId" parameterType="int" resultType="com.wacai.pt.goodjob.vo.TaskConfigDropVo">
+        select ts.id, ts.task_name
+        from sched_task_config ts
+        left join sched_project p on ts.project_id = p.id
+        <where>
+            deleted = 1
+            <if test="projectId != null">
+                and p.id = #{projectId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

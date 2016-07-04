@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wacai.pt.goodjob.schedule.mapper.SubJobMapper">
+
+    <select id="findStateByTaskExecuteId" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+        select state
+        from sched_sub_job
+        where task_exec_id = #{taskExecuteId}
+    </select>
+
+    <insert id="insertSubJob" parameterType="com.wacai.pt.goodjob.schedule.model.SubJobModel" useGeneratedKeys="true" keyProperty="id">
+        insert into sched_sub_job (task_exec_id, host_ip, job_name, job_group, job_param, start_time, state, retry_count, exec_msg, job_offset, createTime, lastUpdateTime)
+        values (#{task_exec_id}, #{host_ip}, #{job_name}, #{job_group}, #{job_param}, #{start_time}, #{state}, #{retry_count}, #{exec_msg}, #{job_offset}, now(), now())
+    </insert>
+
+    <update id="updateSubJobRespById" parameterType="com.wacai.pt.goodjob.remote.bean.ExecuteResponse">
+        update sched_sub_job
+        <set>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="hostIp != null">
+                host_ip = #{hostIp},
+            </if>
+            <if test="execMsg != null">
+                exec_msg = #{execMsg},
+            </if>
+            lastUpdateTime = now()
+        </set>
+        where id = #{jobId}
+    </update>
+
+    <update id="updateHostIpById" parameterType="com.wacai.pt.goodjob.remote.bean.ExecuteResponse">
+        update sched_sub_job
+        <set>
+            <if test="hostIp != null">
+                host_ip = #{hostIp},
+            </if>
+
+            lastUpdateTime = now()
+        </set>
+        where id = #{jobId}
+    </update>
+</mapper>

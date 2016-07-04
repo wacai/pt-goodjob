@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wacai.pt.goodjob.mapper.TaskExecuteMapper">
+
+    <!-- 查询任务执行 -->
+    <select id="findTaskExecutes" parameterType="com.wacai.pt.goodjob.vo.args.TaskExecuteSearchVo" resultType="com.wacai.pt.goodjob.vo.TaskExecuteVo">
+        select id, task_config_id, task_config_type, exec_type, task_name, exec_msg, start_time, end_time, sched_time, percent, state, lastUpdateTime, createTime
+        from sched_task_execute
+        <where>
+            1 = 1
+            <if test="task_config_id != null">
+                and task_config_id = #{task_config_id}
+            </if>
+            <if test="state != null">
+                and state = #{state}
+            </if>
+            <if test="startTime != null">
+                and createTime <![CDATA[>=]]> #{startTime}
+            </if>
+            <if test="endTime != null">
+                and createTime  <![CDATA[<=]]> #{endTime}
+            </if>
+        </where>
+        order by id desc
+        limit 100
+    </select>
+
+</mapper>

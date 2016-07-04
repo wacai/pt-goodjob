@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wacai.pt.goodjob.mapper.ProjectMapper">
+
+    <!-- 查询任务参数 -->
+    <select id="findAllProject" resultType="com.wacai.pt.goodjob.vo.ProjectVo">
+        select id, name, code, p_desc
+        from sched_project
+    </select>
+
+    <insert id="insertProject" parameterType="com.wacai.pt.goodjob.vo.ProjectVo" useGeneratedKeys="true" keyProperty="id">
+        insert into sched_project (name, code, p_desc)
+        values (#{name}, #{code}, #{p_desc})
+    </insert>
+
+</mapper>

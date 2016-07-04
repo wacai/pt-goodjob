@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans        http://www.springframework.org/schema/beans/spring-beans.xsd        http://code.alibabatech.com/schema/dubbo        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	<!-- -->
+
+	<!--<dubbo:consumer check="false" />-->
+
+	<!--<dubbo:application name="${application.name}" owner="xuanwu"/>-->
+	<!--&lt;!&ndash;<dubbo:provider loadbalance="random" port="20876" />&ndash;&gt;-->
+	<!--<dubbo:provider loadbalance="random" />-->
+	<!--&lt;!&ndash;<dubbo:registry protocol="redis" address="${redis.servers}" cluster="replicate" />&ndash;&gt;-->
+	<!--<dubbo:registry protocol="zookeeper" address="${dubbo.zk.servers}" client="zkclient" group="${dubbo.zk.group}"/>-->
+
+	<!--<dubbo:service interface="com.wacai.pt.goodjob.remote.service.SubJobService" ref="subJobService" />-->
+
+</beans>

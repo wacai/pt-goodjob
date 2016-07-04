@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- define the SqlSessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="wacGoodJobDataSource"/>
+        <property name="typeAliasesPackage" value="com.wacai.pt.goodjob.schedule.model, com.wacai.pt.goodjob.schedule.vo"/>
+        <property name="mapperLocations">
+            <list>
+                <value>classpath*:mapper/com/wacai/pt/goodjob/schedule/*.xml</value>
+            </list>
+        </property>
+    </bean>
+    
+    <!-- scan for mappers and let them be autowired -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com/wacai/pt/goodjob/schedule/mapper"/>
+    </bean>
+
+	 <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+    </bean>
+
+</beans>

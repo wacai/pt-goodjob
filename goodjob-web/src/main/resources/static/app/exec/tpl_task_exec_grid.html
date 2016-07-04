@@ -1,0 +1,46 @@
+{{if execlist==null}}
+<tr>
+    <td colspan="9" class="text-center">
+        无数据
+    </td>
+</tr>
+{{else}}
+{{each execlist as exec i}}
+<tr class="{{if exec.state==1}}danger{{/if}}">
+    <td>{{exec.id}}</td>
+    <td >
+        {{if exec.task_config_type==0}}
+        <a href="#show_dep_tree" data-execid="{{exec.id}}" data-use="show_subjob">{{exec.task_name}}</a>
+        {{else if exec.task_config_type==1}}
+        <!--<a href="#show_task_param" data-taskconfigid="{{exec.id}}" data-taskname="{{exec.task_name}}"-->
+           <!--data-use="show_taskparam">{{exec.task_name}}</a>-->
+        <a href="#show_task_param" data-execid="{{exec.id}}" data-use="show_subjob">{{exec.task_name}}</a>
+        {{else if exec.task_config_type==2}}
+        <a href="#show_dep_tree" data-execid="{{exec.id}}" data-use="show_subjob">{{exec.task_name}}</a>
+        {{/if}}
+    </td>
+    <td>{{if exec.task_config_type==0}}默认{{else if exec.task_config_type==1}}分片{{else if
+        exec.task_config_type==2}}依赖{{/if}}
+    </td>
+    <td>{{if exec.state==0}}成功
+        {{else if exec.state==1}}失败
+        {{else if exec.state==2}}处理中
+        {{else if exec.state==3}}超时{{/if}}
+    </td>
+    <td style="width:260px;">
+        {{if exec.exec_msg}}
+        <a
+                style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;width: 260px;height:100%;display: inline-block;" data-use="show_exec_msg">{{exec.exec_msg}}</a>
+        {{/if}}
+    </td>
+    <td>{{if exec.exec_type==0}}默认{{else if exec.exec_type==1}}手动{{/if}}</td>
+
+    <td>{{exec.start_time}}</td>
+    <td>{{exec.end_time}}</td>
+    <td>{{exec.createTime}}</td>
+</tr>
+{{/each}}
+
+{{/if}}
+
+

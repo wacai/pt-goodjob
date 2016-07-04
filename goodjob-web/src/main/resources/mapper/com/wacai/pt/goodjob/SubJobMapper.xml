@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wacai.pt.goodjob.mapper.SubJobMapper">
+
+    <!-- 查询任务执行 -->
+    <select id="findSubJobs" parameterType="long" resultType="com.wacai.pt.goodjob.vo.SubJobVo">
+        select id, task_exec_id, host_ip, job_name, state, job_group, job_param, start_time, end_time, exec_msg, lastUpdateTime, createTime
+        from sched_sub_job
+        where task_exec_id = #{task_exec_id}
+        order by id desc
+        limit 100
+    </select>
+
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wacai.pt.goodjob.mapper.TaskHostMapper">
+
+    <!-- 插入HostModel -->
+    <insert id="insertHostModel" parameterType="com.wacai.pt.goodjob.model.HostModel" useGeneratedKeys="true" keyProperty="id">
+        insert into sched_task_host (task_config_id, ip, disabled, owner, lastUpdateTime, createTime)
+        values (#{task_config_id}, #{ip}, 1, 0, now(), now())
+    </insert>
+
+    <!-- 查询任务主机 -->
+    <select id="findTaskHostById" parameterType="int" resultType="com.wacai.pt.goodjob.vo.TaskHostVo">
+        select id, task_config_id, ip, owner, disabled, host_desc, lastUpdateTime, createTime, lastModifyBy
+        from sched_task_host
+        where task_config_id = #{task_config_id}
+    </select>
+
+    <delete id="deleteExceedIps" parameterType="java.util.Date">
+        delete from sched_task_host
+        where disabled = 1 and owner = 0 and lastUpdateTime <![CDATA[<]]> #{lastUpdateTime}
+    </delete>
+
+</mapper>

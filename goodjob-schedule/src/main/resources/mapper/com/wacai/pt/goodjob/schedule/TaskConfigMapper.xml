@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wacai.pt.goodjob.schedule.mapper.TaskConfigMapper">
+
+    <insert id="insertTaskConfig" parameterType="com.wacai.pt.goodjob.schedule.model.TaskConfigModel" useGeneratedKeys="true" keyProperty="id">
+        insert into sched_task_config (task_name, task_state, task_desc, task_group, project_id, next_fire_time, prev_fire_time, retry, delay_skip, exact_once, timeout, cron_exp, type, job_data, lastUpdateTime, createTime, lastModifyBy)
+        values (#{task_name}, #{task_state}, #{task_desc}, #{task_group}, #{project_id}, #{next_fire_time}, #{prev_fire_time}, #{retry}, #{delay_skip}, #{exact_once}, #{timeout},#{cron_exp}, #{type}, #{job_data}, now(), now(), #{lastModifyBy})
+    </insert>
+
+    <!-- 通过ID更新任务配置 -->
+    <update id="updateTaskConfigById" parameterType="com.wacai.pt.goodjob.interior.remote.bean.TaskConfigBean">
+        update sched_task_config
+        <set>
+            <if test="task_name != null and task_name != ''">
+                task_name = #{task_name},
+            </if>
+            <if test="task_desc != null and task_desc != ''">
+                task_desc = #{task_desc},
+            </if>
+            <if test="task_group != null and task_group != ''">
+                task_group = #{task_group},
+            </if>
+            <if test="cron_exp != null and cron_exp != ''">
+                cron_exp = #{cron_exp},
+            </if>
+            <if test="delay_skip != null">
+                delay_skip = #{delay_skip},
+            </if>
+            <if test="exact_once != null">
+                exact_once = #{exact_once},
+            </if>
+            <if test="retry != null">
+                retry = #{retry},
+            </if>
+            <if test="timeout != null">
+                timeout = #{timeout},
+            </if>
+            <if test="job_data != null and job_data != ''">
+                job_data = #{job_data},
+            </if>
+            <if test="lastModifyBy != null and lastModifyBy != ''">
+                lastModifyBy = #{lastModifyBy},
+            </if>
+
+            lastUpdateTime = now()
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 更新cron -->
+    <update id="updateCron_expById" parameterType="com.wacai.pt.goodjob.interior.remote.bean.TaskHandleBean">
+        update sched_task_config
+        <set>
+            cron_exp = #{cron_exp},
+            <if test="lastModifyBy != null and lastModifyBy != ''">
+                lastModifyBy = #{lastModifyBy},
+            </if>
+            lastUpdateTime = now()
+        </set>
+        where id = #{id}
+    </update>
+
+
+    <!-- 删除任务 -->
+    <update id="deleteTaskConfigById" parameterType="com.wacai.pt.goodjob.interior.remote.bean.TaskHandleBean">
+        update sched_task_config
+        <set>
+            deleted = 0,
+            <if test="lastModifyBy != null and lastModifyBy != ''">
+                lastModifyBy = #{lastModifyBy},
+            </if>
+            lastUpdateTime = now()
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 停用任务 -->
+    <update id="stopTaskConfigById" parameterType="com.wacai.pt.goodjob.interior.remote.bean.TaskHandleBean">
+        update sched_task_config
+        <set>
+            task_state = 0,
+            <if test="lastModifyBy != null and lastModifyBy != ''">
+                lastModifyBy = #{lastModifyBy},
+            </if>
+            lastUpdateTime = now()
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 启用用任务 -->
+    <update id="startTaskConfigById" parameterType="com.wacai.pt.goodjob.interior.remote.bean.TaskHandleBean">
+        update sched_task_config
+        <set>
+            task_state = 1,
+            <if test="lastModifyBy != null and lastModifyBy != ''">
+                lastModifyBy = #{lastModifyBy},
+            </if>
+            lastUpdateTime = now()
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="updateTaskConfigModelById" parameterType="com.wacai.pt.goodjob.schedule.model.TaskConfigModel">
+        update sched_task_config
+        <set>
+            <if test="next_fire_time != null">
+                next_fire_time = #{next_fire_time},
+            </if>
+            <if test="prev_fire_time != null">
+                prev_fire_time = #{prev_fire_time},
+            </if>
+            lastUpdateTime = now()
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 查询所有可用的task -->
+    <select id="loadAllUsableTasks" resultType="com.wacai.pt.goodjob.schedule.model.TaskConfigModel">
+        select id, task_name, cron_exp, delay_skip
+        from sched_task_config
+        where deleted = 1 and task_state = 1
+    </select>
+
+    <!-- 查询task -->
+    <select id="findTaskById" parameterType="java.lang.Integer" resultType="com.wacai.pt.goodjob.schedule.model.TaskConfigModel">
+        select id, task_name, cron_exp, delay_skip
+        from sched_task_config
+        where deleted = 1 and id = #{id}
+    </select>
+
+    <resultMap id="schedConfigMap" type="com.wacai.pt.goodjob.schedule.vo.TaskConfigVo">
+        <result property="id" column="id" />
+        <result property="task_group" column="task_group" />
+        <result property="task_name" column="task_name" />
+        <result property="cron_exp" column="cron_exp" />
+        <result property="type" column="type" />
+        <result property="delay_skip" column="delay_skip" />
+        <result property="exact_once" column="exact_once" />
+        <result property="job_data" column="job_data" />
+        <result property="timeout" column="timeout" />
+        <collection property="taskParamVos" ofType="com.wacai.pt.goodjob.schedule.vo.TaskParamVo">
+            <result property="id" column="tp_id" />
+            <result property="param" column="param" />
+        </collection>
+    </resultMap>
+
+    <!-- 查询调度配置 -->
+    <select id="getSchedConfigById" resultMap="schedConfigMap" parameterType="java.lang.Integer">
+        select tc.id, tc.task_group, tc.task_name, tc.cron_exp, tc.type, tc.delay_skip, tc.exact_once, tc.job_data, tc.timeout, tp.id as tp_id, tp.param
+        from sched_task_config tc
+        left join sched_task_param tp on tp.task_config_id = tc.id
+        where tc.id = #{id} and tc.deleted = 1 and tc.task_state = 1
+    </select>
+
+    <!-- 查询调度配置（无task_state条件） -->
+    <select id="findSchedConfigWithoutStateById" resultMap="schedConfigMap" parameterType="java.lang.Integer">
+        select tc.id, tc.task_group, tc.task_name, tc.cron_exp, tc.type, tc.delay_skip, tc.exact_once, tc.job_data, tc.timeout, tp.id as tp_id, tp.param
+        from sched_task_config tc
+        left join sched_task_param tp on tp.task_config_id = tc.id
+        where tc.id = #{id} and tc.deleted = 1
+    </select>
+
+    <!-- 查询所有可用的task -->
+    <select id="loadAllUsableSchedConfig" resultMap="schedConfigMap" parameterType="java.lang.Integer">
+        select tc.id, tc.task_group, tc.task_name, tc.cron_exp, tc.type, tc.delay_skip, tc.exact_once, tc.job_data, tc.timeout, tp.id as tp_id, tp.param
+        from sched_task_config tc
+        left join sched_task_param tp on tp.task_config_id = tc.id
+        where tc.deleted = 1 and tc.task_state = 1
+    </select>
+
+    <!-- 查询配置 -->
+    <select id="getTaskConfigById" resultType="com.wacai.pt.goodjob.schedule.model.TaskConfigModel" parameterType="java.lang.Integer">
+        select id, task_group, task_name, type, task_desc, delay_skip, exact_once, job_data, timeout
+        from sched_task_config
+        where id = #{id} and deleted = 1 and task_state = 1
+    </select>
+</mapper>

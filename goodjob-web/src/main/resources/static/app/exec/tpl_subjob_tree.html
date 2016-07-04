@@ -1,0 +1,53 @@
+<div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne">
+       <div class="panel-title">
+           {{taskName}}
+       </div>
+    </div>
+    <table class="table table-responsive table-bordered">
+        <thead>
+        <tr>
+            <th>主机</th>
+            <th>dubbo group</th>
+            <th>参数</th>
+            <th>开始时间</th>
+            <th>结束时间</th>
+            <th>状态</th>
+            <th>执行信息</th>
+            <!--<th>创建时间</th>-->
+            <!--<th>更新时间</th>-->
+        </tr>
+        </thead>
+        <tbody>
+        {{each subJobList as subjob i}}
+        <tr>
+            <td>{{subjob.host_ip}}</td>
+            <td>{{subjob.job_group}}</td>
+            <td><a
+                style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;width: 100px;height:100%;display: inline-block;"
+                 data-use="show_job_param_msg">{{subjob.job_param}}</a>
+            </td>
+            <td style="width:140px;">{{subjob.start_time}}</td>
+            <td style="width:140px;">{{subjob.end_time}}</td>
+            <td style="white-space:nowrap;">
+                {{if subjob.state==0}}成功
+                {{else if subjob.state==1}}失败
+                {{else if subjob.state==2}}处理中
+                {{else if subjob.state==3}}超时
+                {{else if subjob.state==4}}重试
+                {{else if subjob.state==5}}准备好
+                {{/if}}
+            </td>
+            <td>
+                {{if subjob.exec_msg}}
+                <a style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;width: 260px;height:100%;display: inline-block;" data-use="show_exec_msg">{{subjob.exec_msg}}</a>
+                {{/if}}
+            </td>
+        </tr>
+        {{/each}}
+
+
+        </tbody>
+    </table>
+
+</div>

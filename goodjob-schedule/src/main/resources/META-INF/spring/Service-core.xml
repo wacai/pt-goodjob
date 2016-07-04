@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+       default-lazy-init="false">
+    <!--<context:property-placeholder location="classpath:application.properties" system-properties-mode="OVERRIDE"/>-->
+
+
+
+    <!-- Scans for application @Components to deploy -->
+    <context:component-scan base-package="com.wacai.pt.goodjob.schedule" />
+
+    <!-- enable autowire -->
+    <context:annotation-config />
+
+    <!-- spring容器静态方法-->
+    <!--<bean id="springContextHolder" class="com.wacai.pt.goodjob.schedule.util.SpringContextHolder"></bean>-->
+
+    <!-- 连接GoodJob 数据库 -->
+    <bean id="wacGoodJobDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="${goodjob.database.jdbc.url}" />
+        <property name="username" value="${goodjob.database.jdbc.username}" />
+        <property name="password" value="${goodjob.database.jdbc.password}" />
+        <property name="connectionProperties" value="config.decrypt=true" />
+
+        <property name="filters"><value>stat,config</value></property>
+
+        <property name="maxActive"><value>40</value></property>
+        <property name="initialSize" value="${goodjob.database.jdbc.pool.initsize}"></property>
+        <property name="maxWait"><value>60000</value></property>
+        <property name="minIdle"><value>1</value></property>
+
+        <property name="timeBetweenEvictionRunsMillis"><value>60000</value></property>
+        <property name="minEvictableIdleTimeMillis"><value>300000</value></property>
+
+        <property name="validationQuery"><value>SELECT 'x'</value></property>
+        <property name="testWhileIdle"><value>true</value></property>
+        <property name="testOnBorrow"><value>false</value></property>
+        <property name="testOnReturn"><value>false</value></property>
+
+        <property name="poolPreparedStatements"><value>false</value></property>
+        <property name="maxOpenPreparedStatements"><value>20</value></property>
+        <property name="proxyFilters">
+            <list>
+                <ref bean="stat-filter" />
+            </list>
+        </property>
+    </bean>
+
+    <bean id="stat-filter" class="com.alibaba.druid.filter.stat.StatFilter">
+        <property name="slowSqlMillis" value="1000" />
+        <property name="logSlowSql" value="true" />
+    </bean>
+    
+</beans>

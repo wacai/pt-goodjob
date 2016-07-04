@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd"
+       default-lazy-init="false">
+
+    <!-- 连接GoodJob 数据库 -->
+    <bean id="wacGoodJobDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="${goodjob.database.jdbc.url}" />
+        <property name="username" value="${goodjob.database.jdbc.username}" />
+        <property name="password" value="${goodjob.database.jdbc.password}" />
+        <property name="connectionProperties" value="config.decrypt=true" />
+
+        <property name="filters"><value>stat,config</value></property>
+
+        <property name="maxActive"><value>40</value></property>
+        <property name="initialSize"><value>5</value></property>
+        <property name="maxWait"><value>60000</value></property>
+        <property name="minIdle"><value>1</value></property>
+
+        <property name="timeBetweenEvictionRunsMillis"><value>60000</value></property>
+        <property name="minEvictableIdleTimeMillis"><value>300000</value></property>
+
+        <property name="validationQuery"><value>SELECT 'x'</value></property>
+        <property name="testWhileIdle"><value>true</value></property>
+        <property name="testOnBorrow"><value>false</value></property>
+        <property name="testOnReturn"><value>false</value></property>
+
+        <property name="poolPreparedStatements"><value>false</value></property>
+        <property name="maxOpenPreparedStatements"><value>20</value></property>
+        <property name="proxyFilters">
+            <list>
+                <ref bean="stat-filter" />
+            </list>
+        </property>
+    </bean>
+
+    <bean id="stat-filter" class="com.alibaba.druid.filter.stat.StatFilter">
+        <property name="slowSqlMillis" value="1000" />
+        <property name="logSlowSql" value="true" />
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="wacGoodJobDataSource"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- define the SqlSessionFactory -->
+    <bean id="sqlGoodJobSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="wacGoodJobDataSource"/>
+        <property name="typeAliasesPackage" value="com.wacai.pt.goodjob.model, com.wacai.pt.goodjob.vo"/>
+        <property name="mapperLocations">
+            <list>
+                <value>classpath*:mapper/com/wacai/pt/goodjob/*.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- scan for mappers and let them be autowired -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com/wacai/pt/goodjob/mapper"/>
+    </bean>
+
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlGoodJobSessionFactory"/>
+    </bean>
+
+</beans>

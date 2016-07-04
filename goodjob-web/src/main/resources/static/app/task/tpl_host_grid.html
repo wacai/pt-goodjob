@@ -1,0 +1,95 @@
+<div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne">
+        <div class="panel-title">
+            {{taskName}}
+            <input id="hostTaskId" value="{{taskConfigId}}" type="hidden" />
+            <input id="hostTaskName" value="{{taskName}}" type="hidden" />
+        </div>
+    </div>
+</div>
+<div class="row" id="grid_option_group" style="background-color: #fff;">
+    <div class="col-md-4">
+        <div class="btn-group pull-left" style="padding: 10px 0;position: relative;">
+            <button class="btn btn-default btn-sm" type="button" data-use="ip-add" id="btn_ip_add">
+                <span class="glyphicon glyphicon-list-alt"></span>
+                预添加IP
+            </button>
+        </div>
+
+    </div>
+    <div class="col-md-offset-4 col-md-4">
+        <div class="btn-group pull-right" style="padding: 10px 0;position: relative;">
+            <button class="btn btn-default btn-sm" type="button" data-use="ip-detect" id="btn_ip_detect">
+                <span class="glyphicon glyphicon-list-alt"></span>
+                手动探测执行机
+            </button>
+        </div>
+    </div>
+</div>
+<div class="panel panel-default">
+
+    <table class="table table-responsive table-bordered">
+        <thead>
+        <tr>
+            <th>IP</th>
+            <th>指定执行机</th>
+            <th>状态</th>
+            <th>更新者</th>
+            <th>操作</th>
+            <!--<th>创建时间</th>-->
+            <!--<th>更新时间</th>-->
+        </tr>
+        </thead>
+        <tbody>
+        {{each hostList as host i}}
+        <tr>
+            <td style="width:120px;">{{host.ip}}</td>
+            <td style="white-space:nowrap;">
+                {{if host.owner==0}}否
+                {{else if host.owner==1}}<font size="3" color="red">是</font>
+                {{/if}}
+            </td>
+            <td style="white-space:nowrap;">
+                {{if host.disabled==0}}<font size="3" color="red">禁用</font>
+                {{else if host.disabled==1}}可用
+                {{/if}}
+            </td>
+            <td>{{host.lastModifyBy}}</td>
+            <td style="width:180px;" class="text-center" data-ip="{{host.ip}}" data-id="{{host.id}}">
+
+                {{if host.owner==0 }}
+                <button type="button" class="btn  btn-default btn-xs "
+                        data-use="host-owner-yes">
+                    <span class="glyphicon glyphicon-play"></span>
+                    指定
+                </button>
+                {{else if host.owner==1}}
+                <button type="button" class="btn  btn-default btn-xs"
+                        data-use="host-owner-no">
+                    <span class="glyphicon glyphicon-pause"></span>
+                    取消指定
+                </button>
+                {{/if}}
+
+                {{if host.disabled==0 }}
+                <button type="button" class="btn  btn-default btn-xs "
+                        data-use="host-enable-yes">
+                    <span class="glyphicon glyphicon-play"></span>
+                    启用
+                </button>
+                {{else if host.disabled==1}}
+                <button type="button" class="btn  btn-default btn-xs"
+                        data-use="host-enable-no">
+                    <span class="glyphicon glyphicon-pause"></span>
+                    禁用
+                </button>
+                {{/if}}
+
+            </td>
+        </tr>
+        {{/each}}
+
+        </tbody>
+    </table>
+
+</div>

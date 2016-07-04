@@ -1,0 +1,69 @@
+{{each tasklist as task i}}
+<tr class="{{if task.task_state==0}}danger{{/if}}" data-taskconfigid="{{task.id}}">
+    <td><input type="checkbox" class="checkbox" id="task_checkbox_{{task.id}}" data-taskconfigid="{{task.id}}"
+               data-use="select_task"></td>
+    <td style="width:100px;">
+        {{if task.type==0}}
+        {{task.task_name}}
+        {{else if task.type==1}}
+        <a href="javascript:void(0);" data-use="show_taskparam" data-taskname="{{task.task_name}}"
+           data-taskconfigid={{task.id}}>{{task.task_name}}</a>
+        {{else if task.type==2}}
+        {{task.task_name}}
+        <!--<a href="javascript:void(0);" data-use="show_subjob"-->
+           <!--data-taskconfigid={{task.id}}>{{task.task_name}}</a>-->
+        {{/if}}
+    </td>
+    <td>{{if task.type==0}}默认{{else if task.type==1}}分片{{else if task.type==2}}依赖{{/if}}</td>
+    <!--<td>{{task.task_desc}}</td>-->
+    <td data-relation="task_state">{{if task.task_state==0}}停用{{else if task.task_state==1 }}启用{{/if}}</td>
+    <!--<td>{{task.project_name}}</td>-->
+
+    <td>{{task.timeout}}</td>
+    <td>{{if task.delay_skip==0}}不跳过{{else if task.delay_skip==1}}跳过{{/if}}</td>
+    <td style="width:120px;">
+        <a href="javascript:void(0);" data-use="show_hosts" data-taskname="{{task.task_name}}"
+           data-taskconfigid={{task.id}}>
+            {{task.task_group}}
+        </a>
+    </td>
+
+    <td>{{task.cron_exp}}</td>
+
+    <td style="width:110px;">{{task.next_fire_time}}</td>
+    <td style="width:110px;">{{task.prev_fire_time}}</td>
+    <td style="width:120px;" class="text-center" data-taskstate="{{task.task_state}}" data-taskname="{{task.task_name}}"
+        data-taskconfigid="{{task.id}}">
+        <!--{{task.task_state |setOperationsForTaskList}}-->
+        {{if task.task_state==0 }}
+        <button type="button" class="btn  btn-default btn-xs "
+                data-use="task-start">
+            <span class="glyphicon glyphicon-play"></span>
+            启用
+        </button>
+        {{else if task.task_state==1}}
+        <button type="button" class="btn  btn-default btn-xs"
+                data-use="task-stop">
+            <span class="glyphicon glyphicon-pause"></span>
+            停用
+        </button>
+        <button type="button" class="btn  btn-default btn-xs " data-tasktriggered
+                data-use="trigger-task">
+            <span class="glyphicon glyphicon-play-circle"></span>
+            执行
+        </button>
+        <button type="button" class="btn  btn-default btn-xs" data-use="task-restart">
+            <span class="glyphicon glyphicon-refresh"></span>
+            重启
+        </button>
+        {{/if}}
+
+        <!--<button type="button" class="btn  btn-default btn-xs" data-use="task-del">-->
+            <!--<span class="glyphicon glyphicon-remove"></span>-->
+            <!--删除-->
+        <!--</button>-->
+
+        <!--<span class="glyphicon glyphicon-stop btn-xs btn" title="停止"></span>-->
+    </td>
+</tr>
+{{/each}}

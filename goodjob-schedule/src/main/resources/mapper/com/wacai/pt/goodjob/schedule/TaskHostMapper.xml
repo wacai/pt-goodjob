@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wacai.pt.goodjob.schedule.mapper.TaskHostMapper">
+
+    <!-- 停用主机 -->
+    <update id="stopHostById" parameterType="com.wacai.pt.goodjob.interior.remote.bean.HostHandleBean">
+        update sched_task_host
+        <set>
+            disabled = 0,
+            owner = 0,
+            <if test="lastModifyBy != null">
+                lastModifyBy = #{lastModifyBy},
+            </if>
+            lastUpdateTime = now()
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 启用主机 -->
+    <update id="startHostById" parameterType="com.wacai.pt.goodjob.interior.remote.bean.HostHandleBean">
+        update sched_task_host
+        <set>
+            disabled = 1,
+            <if test="lastModifyBy != null">
+                lastModifyBy = #{lastModifyBy},
+            </if>
+            lastUpdateTime = now()
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 取消调度机 -->
+    <update id="cancelHostOwnerByTaskId" parameterType="com.wacai.pt.goodjob.interior.remote.bean.HostHandleBean">
+        update sched_task_host
+        <set>
+            owner = 0,
+            <if test="lastModifyBy != null">
+                lastModifyBy = #{lastModifyBy},
+            </if>
+            lastUpdateTime = now()
+        </set>
+        where task_config_id = #{taskId}
+    </update>
+
+    <!-- 取消调度机 -->
+    <update id="cancelHostOwnerById" parameterType="com.wacai.pt.goodjob.interior.remote.bean.HostHandleBean">
+        update sched_task_host
+        <set>
+            owner = 0,
+            <if test="lastModifyBy != null">
+                lastModifyBy = #{lastModifyBy},
+            </if>
+            lastUpdateTime = now()
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 指定调度机 -->
+    <update id="assignHostOwnerById" parameterType="com.wacai.pt.goodjob.interior.remote.bean.HostHandleBean">
+        update sched_task_host
+        <set>
+            disabled = 1,
+            owner = 1,
+            <if test="lastModifyBy != null">
+                lastModifyBy = #{lastModifyBy},
+            </if>
+            lastUpdateTime = now()
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 插入IP -->
+    <insert id="insertIp" parameterType="com.wacai.pt.goodjob.schedule.model.HostModel" useGeneratedKeys="true" keyProperty="id">
+        insert into sched_task_host (task_config_id, ip, disabled, owner, lastUpdateTime, createTime)
+        values (#{task_config_id}, #{ip}, #{disabled}, #{owner}, now(), now())
+    </insert>
+
+    <update id="updateTimeByUnique" parameterType="map">
+        update sched_task_host
+        <set>
+            lastUpdateTime = now()
+        </set>
+        where task_config_id = #{taskConfigId} and ip = #{ip}
+    </update>
+
+    <update id="updateTimeById" parameterType="int">
+        update sched_task_host
+        <set>
+            lastUpdateTime = now()
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 查询IP -->
+    <select id="findIdByUnique" parameterType="map" resultType="int">
+        select id
+        from sched_task_host
+        where task_config_id = #{taskConfigId} and ip = #{ip}
+        limit 1
+    </select>
+
+    <update id="batchUpdateByIds" parameterType="java.util.List">
+        update sched_task_host set lastUpdateTime=now()
+        where id in
+        <foreach collection="ids" item="item" index="index" open="(" close=")" separator=",">
+            ${item}
+        </foreach>
+    </update>
+
+    <!-- 查询IP -->
+    <select id="loadHosts" resultType="com.wacai.pt.goodjob.schedule.vo.HostVo">
+        select id, task_config_id, ip, disabled, owner
+        from sched_task_host
+        where disabled = 0 or owner = 1
+        order by task_config_id
+    </select>
+
+    <!-- 查询IP -->
+    <select id="findHostsByTaskId" parameterType="int" resultType="com.wacai.pt.goodjob.schedule.vo.HostVo">
+        select id, task_config_id, ip, disabled, owner
+        from sched_task_host
+        where task_config_id = #{taskId}
+    </select>
+
+    <!-- 查询IP -->
+    <select id="findHostsById" parameterType="int" resultType="com.wacai.pt.goodjob.schedule.vo.HostVo">
+        select id, task_config_id, ip, disabled, owner
+        from sched_task_host
+        where id = #{id}
+    </select>
+
+</mapper>
