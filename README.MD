@@ -1,4 +1,45 @@
 
+部署
+---------------------
+### 主要结构说明
+
+```
+1. goodjob-schedule : 调度机，部署2个节点以上
+2. goodjob-web : 管理控台，部署一个节点
+3. goodjob-example : 接入端事例
+4. goodjob-node : 执行机（接入端）引用jar
+5. config : sql、缺失的jar、图片等
+
+```
+
+### 依赖
+
+```
+1. mysql  --- config目录下有sql
+2. zookeeper --- 网上很多搭建教程
+
+```
+
+### 本地运行
+
+```
+1. 启动example的ExampleApplication.main
+2. 启动schedule的DubboWithSchdSbApplication.main
+3. 启动web的Main.main
+
+```
+
+### 发布
+
+```
+config/bin目录有启动和停用脚本
+把start.sh 和 stop.sh跟打好的jar放到一个目录即可
+如：把goodjob-schedule-1.0.2-SNAPSHOT.jar、start.sh、stop.sh放到同一个目录
+启动: sh start.sh
+停止: sh stop.sh
+```
+
+
 Quick Started
 ---------------------
 ### 依赖
@@ -77,11 +118,11 @@ public class StatisticsDayJob extends AbstractJobExecuteService {
 ```
 
 
-design
+设计
 ---------------------
 <https://github.com/wacai/pt-goodjob/wiki/design>
 
-FAQ
+常见问题
 ---------------------
 <https://github.com/wacai/pt-goodjob/wiki/FAQ>
 
@@ -91,3 +132,4 @@ FAQ
 ---------------------
 #####  后台问题:xuanwu@wacai.com
 #####  前端问题:baojun@wacai.com
+#####  脚本问题:kaijin@wacai.com
