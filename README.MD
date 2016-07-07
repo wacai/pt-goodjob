@@ -1,7 +1,7 @@
 
 部署
 ---------------------
-### 主要结构说明
+#### 1. 主要结构说明
 
 ```
 1. goodjob-schedule : 调度机，部署2个节点以上
@@ -12,7 +12,7 @@
 
 ```
 
-### 依赖
+#### 2. 依赖
 
 ```
 1. mysql  --- config目录下有sql
@@ -20,7 +20,7 @@
 
 ```
 
-### 本地运行
+#### 3. 本地运行
 
 ```
 1. 启动example的ExampleApplication.main
@@ -29,7 +29,7 @@
 
 ```
 
-### 发布
+#### 4. 发布
 
 ```
 config/bin目录有启动和停用脚本
@@ -42,7 +42,7 @@ config/bin目录有启动和停用脚本
 
 Quick Started
 ---------------------
-### 依赖
+#### 1. 依赖
 
 ```
 <dependency>
@@ -53,7 +53,7 @@ Quick Started
 
 ```
 
-### spring 配置
+#### 2. spring 配置
 
 ```
 <dubbo:application name="${application.name}"  />
@@ -87,7 +87,7 @@ Quick Started
 ```
 
 
-### 代码实现
+#### 3. 代码实现
 
 ```
 package com.wacai.schedule.monitor;
