@@ -84,6 +84,10 @@ public class ScheduleExecute {
                     if (Constants.EXACT_ONCE_YES == taskConfigVo.getExact_once().intValue()) {
                         logger.warn("----------任务跳过--------------- contextMap:{}",
                             jsonMapper.toJson(contextMap));
+
+                          //todo 此处请务必告警
+//                        CoeusMonitor.addException(Convert.numToLetter(String.valueOf(taskId)),
+//                                new Exception("task skip."), contextMapJson);
                         return;
                     } else {
                         if (System.currentTimeMillis() - lastTaskExecuteVo.getStart_time() < taskConfigVo
