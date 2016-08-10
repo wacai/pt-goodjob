@@ -7,7 +7,5 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-       <!--<bean id="taskExecuteService" class="com.wacai.pt.goodjob.service.TaskExecuteService"/>-->
-       <bean class="com.wacai.pt.coeus.spring.servlet.config.UrlRegister" init-method="getAllService"/>
 
 </beans>
