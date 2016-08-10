@@ -81,7 +81,7 @@ public class ScheduleExecute {
                 int state = lastTaskExecuteVo.getState().intValue();
                 if (Constants.EXEC_STATE_PROCESSING == state
                     || (Constants.EXEC_STATE_FAIL == state && lastTaskExecuteVo.getEnd_time() == null)) {
-                    if (Constants.EXACT_ONCE_YES == state) {
+                    if (Constants.EXACT_ONCE_YES == taskConfigVo.getExact_once().intValue()) {
                         logger.warn("----------任务跳过--------------- contextMap:{}",
                             jsonMapper.toJson(contextMap));
                         return;
