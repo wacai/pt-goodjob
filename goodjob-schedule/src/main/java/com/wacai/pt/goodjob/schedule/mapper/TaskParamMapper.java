@@ -17,5 +17,7 @@ public interface TaskParamMapper {
 
     void deleteTaskParamById(@Param("id")Integer id);
 
+    void deleteTaskParamByTaskId(@Param("taskConfigId")Integer taskConfigId);
+
     int countParamByParam(TaskParamBean taskParamBean);
 }

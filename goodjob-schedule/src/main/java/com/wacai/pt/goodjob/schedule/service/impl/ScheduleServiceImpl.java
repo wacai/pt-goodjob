@@ -81,18 +81,14 @@ public class ScheduleServiceImpl implements ScheduleService {
     public void modifyTask(TaskConfigBean taskConfigBean) throws Exception {
         logger.info("---------修改任务----------taskConfigBean:{}", jsonMapper.toJson(taskConfigBean));
         taskConfigMapper.updateTaskConfigById(taskConfigBean);
-        if (taskConfigBean.getParamList() != null) {
-            TaskParamBean taskParamBean = new TaskParamBean();
-            taskParamBean.setTask_config_id(taskConfigBean.getId());
+        if (Constants.TASK_CONFIG_TYPE_1 == taskConfigBean.getType().intValue()) {
+            taskParamMapper.deleteTaskParamByTaskId(taskConfigBean.getId());
             for (String param : taskConfigBean.getParamList()) {
-                taskParamBean.setParam(param);
-                if (taskParamMapper.countParamByParam(taskParamBean) == 0) {
-                    TaskParamModel taskParamModel = new TaskParamModel();
-                    taskParamModel.setParam(param);
-                    taskParamModel.setTaskConfigId(taskConfigBean.getId());
-                    taskParamModel.setLastModifyBy(taskConfigBean.getLastModifyBy());
-                    taskParamMapper.insertTaskParam(taskParamModel);
-                }
+                TaskParamModel taskParamModel = new TaskParamModel();
+                taskParamModel.setParam(param);
+                taskParamModel.setTaskConfigId(taskConfigBean.getId());
+                taskParamModel.setLastModifyBy(taskConfigBean.getLastModifyBy());
+                taskParamMapper.insertTaskParam(taskParamModel);
             }
         }
         if (taskConfigBean.isEffect()) {

@@ -8,6 +8,7 @@ import com.alibaba.dubbo.config.utils.ReferenceConfigCache;
 import com.wacai.pt.goodjob.interior.remote.service.ScheduleService;
 import com.wacai.pt.goodjob.remote.service.JobExecuteRespService;
 import com.wacai.pt.goodjob.remote.service.JobExecuteService;
+import com.wacai.pt.goodjob.schedule.detect.DetectHost;
 import com.wacai.pt.goodjob.schedule.filter.dubbo.WacIpLoadBalance;
 import com.wacai.pt.goodjob.schedule.util.SpringContextHolder;
 import org.slf4j.Logger;
@@ -156,6 +157,7 @@ public class SubJobExecuteAdaptor {
             }
         }
         executeServiceMap.clear();
+        DetectHost.getDetectHost().getTaskMap().clear();
     }
 
     public static void destroyProvider() {

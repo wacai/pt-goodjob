@@ -17,6 +17,11 @@
         select count(id) from sched_task_param where id = #{id}
     </select>
 
+    <!-- 通过任务ID删除参数 -->
+    <delete id="deleteTaskParamByTaskId" parameterType="int">
+        delete from sched_task_param where task_config_id = #{taskConfigId}
+    </delete>
+
     <!-- 计算参数 -->
     <select id="countParamByParam" parameterType="com.wacai.pt.goodjob.interior.remote.bean.TaskParamBean" resultType="int" >
         select count(id) from sched_task_param where param = #{param} and task_config_id = #{task_config_id}
